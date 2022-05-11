@@ -10,6 +10,8 @@ if True:
 
 # Print a list, nicely formatted
 def prln(l,  width=defaultWidth, separator='|'):
+	
+	SEPLEN = len(separator)
 
 	# Terminal width
 	if width <= 0:
@@ -29,7 +31,7 @@ def prln(l,  width=defaultWidth, separator='|'):
 		columnWidths += [maxWidth]
 
 	# If we can't fit, we need to truncate some columns
-	availableChars = width - columnCount - 1
+	availableChars = width - (columnCount + 1)*SEPLEN
 	if sum(columnWidths) > availableChars:
 		availableForOne = availableChars / columnCount
 		totalToSplit = availableChars
@@ -50,7 +52,9 @@ def prln(l,  width=defaultWidth, separator='|'):
 
 	
 	# Actually do the printing
-	print('-'*(sum(columnWidths)+columnCount+1))
+	vertline = lambda: 	print('-'*(sum(columnWidths)+(columnCount+1)*SEPLEN ))
+
+	vertline()
 	for line in l:
 		print(separator, end='')
 		for c in range(columnCount):
@@ -70,7 +74,7 @@ def prln(l,  width=defaultWidth, separator='|'):
 
 			print(item, end=separator)
 		print()
-	print('-'*(sum(columnWidths)+columnCount+1))
+	vertline()
 	
 
 
@@ -91,7 +95,7 @@ if __name__ == '__main__':
 	]
 
 	prln(a, 80)
-	prln(a, 40, ' ')
+	prln(a, 40, ' | ')
 	prln(a)
 	prln(b, 80)
-	prln(b)
+	prln(b, 80, separator="____")
