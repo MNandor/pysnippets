@@ -1,22 +1,22 @@
 #!/bin/python3 -i
 
 
+USE_TERMINAL_WIDTH = True
 # Read terminal size
 defaultWidth = -1
-if True:
+if USE_TERMINAL_WIDTH: 
 	import os
 
-	defaultWidth = os.get_terminal_size().columns
-
 # Print a list, nicely formatted
-def prln(l,  width=defaultWidth, separator='|'):
+def prln(l,  width=-1, separator='|'):
+
+	if USE_TERMINAL_WIDTH and width == -1:
+		width = os.get_terminal_size().columns
+	elif width == -1:
+		width = 1e4
 	
 	SEPLEN = len(separator)
 
-	# Terminal width
-	if width <= 0:
-		width = 1e4
-	
 	# Count Columns
 	columnCount = max([len(x) for x in l])
 
