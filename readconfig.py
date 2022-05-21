@@ -20,6 +20,12 @@ def readconfig(file, handleList = False):
 
 		# Lists
 		if handleList and value.count(',') > 0:
+			
+			# Single item lists and extra comma at the end
+			if value[-1] == ',':
+				value = value[:-1]
+
+
 			l = value.split(',')
 			# Maps
 			if all([x.count(':')==1 for x in l]):
