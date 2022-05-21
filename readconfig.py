@@ -2,7 +2,7 @@
 
 import os
 
-def readconfig(file):
+def readconfig(file, handleList = False):
 	config = {}
 	with open(file, 'rt') as ifs:
 		lines = ifs.readlines()
@@ -16,9 +16,20 @@ def readconfig(file):
 			print('Wrongly formatted line:')
 			print(line)
 
-		line = line.split('=')
+		key,value = line.split('=')
 
-		config[line[0]] = line[1]
+		# Lists
+		if handleList and value.count(',') > 0:
+			l = value.split(',')
+			# Maps
+			if all([x.count(':')==1 for x in l]):
+				m = {x.split(':')[0]:x.split(':')[1] for x in l}
+				config[key] = m
+			else:
+				config[key] = l
+		
+		else:
+			config[key] = value
 	
 	return config
 
