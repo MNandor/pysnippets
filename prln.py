@@ -59,18 +59,31 @@ def prln(l,  width=-1, separator='|'):
 		print(separator, end='')
 		for c in range(columnCount):
 			w = columnWidths[c]
-			item = ''
-			if len(line) > c:
-				item = line[c]
+			item = line[c]
 
-			if len(str(item)) < w:
-				if isinstance(item, int) or isinstance(item, float):
-					item = str(item).rjust(w, ' ')
-				else:
-					item = str(item).ljust(w, ' ')
+			# Ints are right justified
+			if isinstance(item, int):
+				item = str(item)
+
+				if len(item) < w:
+					item = item.rjust(w, ' ')
+
+			# Floats shout display parts before the decimal point
+			# And then as many decimals as possible
+			elif isinstance(item, float):
+				digits = len(str(int(item)))
+				decimals = max(w-1-digits, 0)
+				item = f'{item:{w}.{decimals}f}'
+
+			# Treat everything else as a string
+			else:
+				item = str(item)
+				item = item.ljust(w, ' ')
+
+
+			# In all cases use the same shortening for now
 			if len(str(item)) > w:
-				item = str(item)[:w-3]+"..."
-
+				item = str(item)[:w-3]+'.'*min(3, w)
 
 			print(item, end=separator)
 		print()
