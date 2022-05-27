@@ -23,8 +23,8 @@ cur = db.cursor()
 cur.execute('select * from sqlite_master')
 headers = [(x[1], x[4]) for x in cur.fetchall()]
 headers = [x for x in headers if x[0] not in ['android_metadata', 'sqlite_sequence']]
-tablenames = [x[0] for x in headers]
-tablefields = [x[1].split('(')[1].split(')')[0].split(',') for x in headers]
+tablenames = [x[0] for x in headers if x[1]]
+tablefields = [x[1].split('(')[1].split(')')[0].split(',') for x in headers if x[1]]
 
 
 
