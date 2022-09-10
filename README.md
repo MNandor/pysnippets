@@ -1,2 +1,4 @@
 # Python Snippers
-Pieces of code that are generally useful
+
+Pieces of code that are generally useful.
+`python`
