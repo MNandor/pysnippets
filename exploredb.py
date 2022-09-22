@@ -157,6 +157,22 @@ def snap(num = None):
 
 snap()
 
+def edit():
+	table = input('Which table to edit?' )
+	cur.execute(f'select * from {table}')
+	res = cur.fetchall()
+	with open('/tmp/exploredb.txt', 'wt') as ofs:
+		for row in res:
+			for item in row:
+				if isinstance(item, str):
+					item = f'"{item}"'
+				else:
+					item = str(item)
+				ofs.write(item)
+				ofs.write('\t')
+			ofs.write('\n')
+				
+
 
 
 #  __  __       _       
