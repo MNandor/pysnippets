@@ -25,6 +25,7 @@ headers = [(x[1], x[4]) for x in cur.fetchall()]
 headers = [x for x in headers if x[0] not in ['android_metadata', 'sqlite_sequence']]
 tablenames = [x[0] for x in headers if x[1]]
 tablefields = [x[1].split('(')[1].split(')')[0].split(',') for x in headers if x[1]]
+tablecolumns = [[y.strip().split(' ')[0] for y in x] for x in tablefields]
 
 
 
@@ -157,20 +158,42 @@ def snap(num = None):
 
 snap()
 
-def edit():
+def toText():
+	tempfile = '/tmp/exploredb.txt'
 	table = input('Which table to edit?' )
 	cur.execute(f'select * from {table}')
 	res = cur.fetchall()
-	with open('/tmp/exploredb.txt', 'wt') as ofs:
+	with open(tempfile, 'wt') as ofs:
 		for row in res:
 			for item in row:
 				if isinstance(item, str):
-					item = f'"{item}"'
+# 					item = f'"{item}"'
+					pass
 				else:
 					item = str(item)
 				ofs.write(item)
 				ofs.write('\t')
 			ofs.write('\n')
+	
+	print(f'Temp file written to {tempfile}. Edit and load with fromText()')
+
+def fromText():
+	tempfile = '/tmp/exploredb.txt'
+	table = input('Which table to edit?' )
+	ind = tablenames.index(table)
+	cols = tablecolumns[ind]
+
+	with open(tempfile, 'rt') as ifs:
+		lines = ifs.readlines()
+		for i, line in enumerate(lines):
+			i = i+1 # 1 index
+			line = line.strip().split('\t')
+
+			changes = ', '.join(f'{k} = "{v}"' for k, v in zip(cols, line))
+			print(line)
+			cur.execute(f'update {table} set {changes} where rowid = {i}')
+	
+	print('Use snap() to verify that the changes were as expected')
 				
 
 
